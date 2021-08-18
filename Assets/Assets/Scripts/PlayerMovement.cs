@@ -6,6 +6,7 @@ public class PlayerMovement : MonoBehaviour
 {
     public bool isSpeedPowerupActive = false;
     public bool canTripleShot = false;
+    public bool isShieldActive = false;
     [SerializeField]
     private float playerMoveSpeed;
     private float horizontalInput;
@@ -15,6 +16,7 @@ public class PlayerMovement : MonoBehaviour
     public float canFire = 0;
     public int playerLives = 5;
     public GameObject explosion;
+    public GameObject shieldGameObject;
     // Start is called before the first frame update
     void Start()
     {
@@ -110,11 +112,27 @@ public class PlayerMovement : MonoBehaviour
     {
         //subtract one live from the player lives
         //if lives<1 then destroy player
-        playerLives--;
-        if (playerLives < 1)
+        //if player has shields do no damage or damage
+        if(isShieldActive==true)
         {
-            Instantiate(explosion, transform.position, Quaternion.identity);
-            Destroy(this.gameObject);
+            isShieldActive = false;
+            shieldGameObject.SetActive(false);
+            return;
         }
+        else
+        {
+            playerLives--;
+            if (playerLives < 1)
+            {
+                Instantiate(explosion, transform.position, Quaternion.identity);
+                Destroy(this.gameObject);
+            }
+        }
+       
+    }
+    public void EnableShieldPowerUp()
+    {
+        isShieldActive = true;
+        shieldGameObject.SetActive(true);
     }
 }

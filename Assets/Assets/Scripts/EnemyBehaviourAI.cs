@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class EnemyBehaviourAI : MonoBehaviour
 {
+    [SerializeField]
+    private GameObject enemyExplosion;
     public float enemySpeed;// a variable to enemy speed
 
     // Start is called before the first frame update
@@ -32,6 +34,8 @@ public class EnemyBehaviourAI : MonoBehaviour
                 Destroy(transform.parent.gameObject);
             }
             Destroy(collision.gameObject);
+           
+            Instantiate(enemyExplosion, transform.position, Quaternion.identity);
             Destroy(this.gameObject);
         }
         else if (collision.tag == "Player")

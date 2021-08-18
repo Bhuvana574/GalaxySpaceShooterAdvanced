@@ -14,6 +14,7 @@ public class PlayerMovement : MonoBehaviour
     public float fireRate = 0.25f;
     public float canFire = 0;
     public int playerLives = 5;
+    public GameObject explosion;
     // Start is called before the first frame update
     void Start()
     {
@@ -112,6 +113,7 @@ public class PlayerMovement : MonoBehaviour
         playerLives--;
         if (playerLives < 1)
         {
+            Instantiate(explosion, transform.position, Quaternion.identity);
             Destroy(this.gameObject);
         }
     }

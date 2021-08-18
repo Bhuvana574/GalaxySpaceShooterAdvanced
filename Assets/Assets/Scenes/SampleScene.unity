@@ -310,7 +310,8 @@ MonoBehaviour:
   tripleLaserPrefab: {fileID: 4965386443188748957, guid: 10caa8bdd28645d44a375f3ea610e510, type: 3}
   fireRate: 0.25
   canFire: 0
-  playerLives: 5
+  playerLives: 1
+  explosion: {fileID: 6092100533786287811, guid: 04ff31ae7091d96489548e8d6bfdb81b, type: 3}
 --- !u!61 &803593663
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -544,6 +545,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 371825990, guid: d2999db7c907fc245acedd0310d50d69, type: 3}
+      propertyPath: enemyExplosion
+      value: 
+      objectReference: {fileID: 970251197081133282, guid: 0bb171153401cf043a484e6e6711d028, type: 3}
     - target: {fileID: 4556808388102617725, guid: d2999db7c907fc245acedd0310d50d69, type: 3}
       propertyPath: m_RootOrder
       value: 5

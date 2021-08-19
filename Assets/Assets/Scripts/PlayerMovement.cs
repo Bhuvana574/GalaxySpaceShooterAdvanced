@@ -24,6 +24,9 @@ public class PlayerMovement : MonoBehaviour
     private AudioSource audioSource;
     [SerializeField]
     private AudioClip[] audioClip;
+    [SerializeField]
+    private GameObject[] Engines;
+    private int hitcount;
     private void Awake()
     {
         instance = this;
@@ -45,6 +48,7 @@ public class PlayerMovement : MonoBehaviour
         {
             spawn.StartCoroutineFunctions();
         }
+        hitcount = 0;
     }
 
     // Update is called once per frame
@@ -151,6 +155,17 @@ public class PlayerMovement : MonoBehaviour
     }
     public void Damage()
     {
+        hitcount++;
+        if(hitcount==1)
+        {
+            Engines[0].SetActive(true);
+            
+        }
+       else  if (hitcount == 2)
+        {
+            Engines[1].SetActive(true);
+
+        }
         if (isShieldActive == true)
         {
             isShieldActive = false;

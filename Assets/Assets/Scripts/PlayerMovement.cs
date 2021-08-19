@@ -5,134 +5,161 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     public bool isSpeedPowerupActive = false;
-    public bool canTripleShot = false;
+    public bool canTrippleShot = false;
     public bool isShieldActive = false;
     [SerializeField]
-    private float playerMoveSpeed;
-    private float horizontalInput;
-    private float verticalInput;
-    public GameObject laserPrefab,tripleLaserPrefab;
+    private float playermoveSpeed;
+    private float horizontal, vertical;
+    [SerializeField]
+    private GameObject laserPrefab,TriplelaserPrefab;
     public float fireRate = 0.25f;
-    public float canFire = 0;
-    public int playerLives = 5;
+    public float canfire = 0;
+    public static PlayerMovement instance;
+    public int playerLives = 3;
     public GameObject explosion;
-    public GameObject shieldGameObject;
+    public GameObject shield;
+    private UIManager uiManager;
+    private GameManager gameManager;
+    private Spawning spawn;
+
+    private void Awake()
+    {
+        instance = this;
+    }
+
     // Start is called before the first frame update
     void Start()
     {
         transform.position = new Vector3(0, 0, 0);
+        uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
+        gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
+        spawn = GameObject.Find("SpawnManager").GetComponent<Spawning>();
+        if (uiManager != null)
+        {
+            uiManager.UpdateLives(playerLives);
+        }
+        if (spawn != null)
+        {
+            spawn.StartCoroutineFunctions();
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
-        playerMovement();
-        if (Input.GetKeyDown(KeyCode.Space)||Input.GetMouseButton(0))
+        Movement();
+        if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
             Shoot();
         }
+
+       
+
+        //player bounds
+
+      
+
     }
+
     private void Shoot()
     {
-        if (Time.time > canFire)
+        if (Time.time > fireRate)
         {
-            //if triple shot is true shoot three lasers,if not one laser
-            if (canTripleShot == true)
+            //if triple shot is true shoot three lasers, if not one laser
+            if (canTrippleShot == true)
             {
-                Instantiate(tripleLaserPrefab, transform.position , Quaternion.identity);//center
+                Instantiate(TriplelaserPrefab, transform.position + new Vector3(0, 1, 0), Quaternion.identity);
+                
             }
             else
             {
                 Instantiate(laserPrefab, transform.position + new Vector3(0, 1, 0), Quaternion.identity);
             }
-            canFire = Time.time + fireRate;
+           
+            canfire = Time.deltaTime + fireRate;
         }
     }
-    private void playerMovement()
-    {
-        horizontalInput = Input.GetAxis("Horizontal");
-        verticalInput = Input.GetAxis("Vertical");
 
-        //if speed powerup enabled then move 2x faster the normal speed
-        //else normal speed
+    private void Movement()
+    {
+        horizontal = Input.GetAxis("Horizontal");
+        vertical = Input.GetAxis("Vertical");
+
         if (isSpeedPowerupActive == true)
         {
-            transform.Translate(Vector3.right * Time.deltaTime * playerMoveSpeed *2.0f* horizontalInput);
-            transform.Translate(Vector3.up * Time.deltaTime * playerMoveSpeed *2.0f* verticalInput);
+            //print(playermoveSpeed * 2.0f);
+            transform.Translate(Vector3.right * Time.deltaTime * horizontal*playermoveSpeed*2.0f);
+            transform.Translate(Vector3.up * Time.deltaTime * vertical* playermoveSpeed * 2.0f);
         }
         else
         {
-            transform.Translate(Vector3.right * Time.deltaTime * playerMoveSpeed * horizontalInput);
-            transform.Translate(Vector3.up * Time.deltaTime * playerMoveSpeed * verticalInput);
+            transform.Translate(Vector3.right * Time.deltaTime * horizontal*playermoveSpeed);
+            transform.Translate(Vector3.up * Time.deltaTime * vertical*playermoveSpeed);
         }
 
-        //player bounds for y direction
+        
+
+
         if (transform.position.y > 0)
         {
             transform.position = new Vector3(transform.position.x, 0, 0);
         }
         else if (transform.position.y < -4.2f)
         {
-            transform.position = new Vector3(transform.position.x, -4.1f, 0);
-        }
-
-        //player bounds for x direction
-        if (transform.position.x > 9.5f)
-        {
-            transform.position = new Vector3(-9.5f, transform.position.y, 0);
+            transform.position = new Vector3(transform.position.x, -4.2f, 0);
         }
         else if (transform.position.x < -9.5f)
         {
-            transform.position = new Vector3(9.5f, transform.position.y, 0);
+            transform.position = new Vector3(-9.5f, transform.position.y, 0);
+        }
+        else if (transform.position.x > 9.5f)
+        {
+            transform.position = new Vector3(-9.5f, transform.position.y, 0);
         }
     }
-    
-    public void TripleShotPowerUp()
+    public void TrippleShotPowerUp()
     {
-        canTripleShot = true;
+        canTrippleShot = true;
         StartCoroutine(TripleShotPowerDown());
     }
     //method to enable speed power up and power down
     public void SpeedPowerUpOn()
     {
         isSpeedPowerupActive = true;
-        StartCoroutine(SpeedPowerDown());
+        StartCoroutine(SpeedPowerUpDown());
     }
+    public IEnumerator SpeedPowerUpDown()
+    {
+        yield return new WaitForSeconds(5.0f);
+        canTrippleShot = false;
+    }
+
     public IEnumerator TripleShotPowerDown()
     {
         yield return new WaitForSeconds(5.0f);
-        canTripleShot = false;
-    }
-    public IEnumerator SpeedPowerDown()
-    {
-        yield return new WaitForSeconds(5.0f);
-        isSpeedPowerupActive = false;
+        canTrippleShot = false;
     }
     public void Damage()
     {
-        //subtract one live from the player lives
-        //if lives<1 then destroy player
-        //if player has shields do no damage or damage
-        if(isShieldActive==true)
+        if (isShieldActive == true)
         {
             isShieldActive = false;
-            shieldGameObject.SetActive(false);
+            shield.SetActive(false);
             return;
         }
-        else
+        playerLives--;
+        if (playerLives < 1)
         {
-            playerLives--;
-            if (playerLives < 1)
-            {
-                Instantiate(explosion, transform.position, Quaternion.identity);
-                Destroy(this.gameObject);
-            }
+            Instantiate(explosion,transform.position,Quaternion.identity);
+            gameManager.gameOver = true;
+            uiManager.ShowGameOverScreen();
+            Destroy(this.gameObject);
+            
         }
-       
     }
     public void EnableShieldPowerUp()
     {
         isShieldActive = true;
-        shieldGameObject.SetActive(true);
+        shield.SetActive(true);
     }
 }

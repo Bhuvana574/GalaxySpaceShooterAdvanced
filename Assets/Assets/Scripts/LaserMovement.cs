@@ -16,12 +16,13 @@ public class LaserMovement : MonoBehaviour
     void Update()
     {
         transform.Translate(Vector3.up * laserSpeed * Time.deltaTime);
-        if (transform.position.y > 6)
+        if (transform.position.y >= 6)
         {
             if (transform.parent != null)
             {
-                Destroy(transform.parent.gameObject);
+                Destroy(transform.parent);
             }
+
             Destroy(this.gameObject);
         }
     }

@@ -21,7 +21,9 @@ public class PlayerMovement : MonoBehaviour
     private UIManager uiManager;
     private GameManager gameManager;
     private Spawning spawn;
-
+    private AudioSource audioSource;
+    [SerializeField]
+    private AudioClip[] audioClip;
     private void Awake()
     {
         instance = this;
@@ -34,6 +36,7 @@ public class PlayerMovement : MonoBehaviour
         uiManager = GameObject.Find("Canvas").GetComponent<UIManager>();
         gameManager = GameObject.Find("GameManager").GetComponent<GameManager>();
         spawn = GameObject.Find("SpawnManager").GetComponent<Spawning>();
+       audioSource = GameObject.Find("SoundManager").GetComponent<AudioSource>();
         if (uiManager != null)
         {
             uiManager.UpdateLives(playerLives);
@@ -65,15 +68,22 @@ public class PlayerMovement : MonoBehaviour
     {
         if (Time.time > fireRate)
         {
+
             //if triple shot is true shoot three lasers, if not one laser
             if (canTrippleShot == true)
             {
                 Instantiate(TriplelaserPrefab, transform.position + new Vector3(0, 1, 0), Quaternion.identity);
-                
+                audioSource.clip = audioClip[1] ;
+                audioSource.Play();
+                audioSource.loop = false;
+
             }
             else
             {
                 Instantiate(laserPrefab, transform.position + new Vector3(0, 1, 0), Quaternion.identity);
+                audioSource.clip = audioClip[0];
+                audioSource.Play();
+                audioSource.loop = false;
             }
            
             canfire = Time.deltaTime + fireRate;

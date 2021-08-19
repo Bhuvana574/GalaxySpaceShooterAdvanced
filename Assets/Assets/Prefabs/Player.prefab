@@ -73,7 +73,7 @@ SpriteRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 345319855
-  m_SortingLayer: 2
+  m_SortingLayer: 0
   m_SortingOrder: 0
   m_Sprite: {fileID: 21300000, guid: 1b4a8fdd39d3a45d0a9ee484ad6800ec, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
@@ -109,6 +109,9 @@ MonoBehaviour:
   playerLives: 3
   explosion: {fileID: 1272175063174105181, guid: fb72f95cb9244f0479091817e86a3086, type: 3}
   shield: {fileID: 6695683043775076635}
+  audioClip:
+  - {fileID: 8300000, guid: 75676f361bdfeaf41a46623e95df3dbc, type: 3}
+  - {fileID: 8300000, guid: a885c043fab7e46438bba03ba9dab6bc, type: 3}
 --- !u!60 &2914888125322527976
 PolygonCollider2D:
   m_ObjectHideFlags: 0
@@ -340,7 +343,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8401494855827134427, guid: 8cf16cd33273d7644a184b9dee4bde37, type: 3}
       propertyPath: m_SortingLayer
-      value: 2
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 8401494855827134427, guid: 8cf16cd33273d7644a184b9dee4bde37, type: 3}
       propertyPath: m_SortingLayerID
